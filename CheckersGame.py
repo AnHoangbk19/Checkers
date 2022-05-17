@@ -86,8 +86,12 @@ class BoardGame:
             self.board[piece.row][piece.col] = 0
             if piece != 0:
                 if piece.color == RED:
+                    if piece.check_king:
+                        self.red_king -=1
                     self.red_piece -= 1
                 else:
+                    if piece.check_king:
+                        self.brown_king -=1
                     self.brown_piece -= 1
     def get_piece(self,col,row):
         return self.board[row][col]
@@ -196,7 +200,7 @@ class BoardGame:
         else:
             return self.no_valid_moves()
     def score(self):
-        return self.brown_piece + 1.5*self.brown_king - self.red_piece - 1.5*self.red_king
+        return self.brown_piece + 0.5*self.brown_king - self.red_piece - 0.5*self.red_king
     def all_pieces(self,color):
         all_pieces = []
         for r in self.board:
@@ -225,11 +229,7 @@ class Checkers:
         #print("Brown_king:",self.board.brown_king)
         #print("==========================")
         pygame.display.update()
-    def reset(self,first_color_turn):
-        self.board = BoardGame()
-        self.turn = first_color_turn
-        self.piece_selected = None
-        self.valid_move = {}
+    
     def select_square_or_piece(self,col,row):
         if self.piece_selected:
             res = self.move_piece(col,row)
@@ -383,6 +383,9 @@ def main():
                 pos = pygame.mouse.get_pos()
                 col,row = get_piece_from_mouse(pos)
                 game.select_square_or_piece(col,row)
+        #print(str(game.board.brown_piece) + "-BROWN- " +str(game.board.brown_king))
+        #print(str(game.board.red_piece) + "-RED- " +str(game.board.red_king))
+        #print("=====================================================")
         game.update()
     pygame.quit()
 main()
