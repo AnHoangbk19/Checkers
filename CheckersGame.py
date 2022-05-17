@@ -38,6 +38,8 @@ class Piece:
         return self.x, self.y
     def make_king(self):
         self.king = True
+    def check_king(self):
+        return self.king 
 
 class BoardGame:
     def __init__(self,first_color_turn):
@@ -70,7 +72,13 @@ class BoardGame:
     def move_piece(self,p,col,row):
         self.board[row][col] = self.board[p.row][p.col]
         self.board[p.row][p.col] = 0
-        if row == 0 or row == ROWS-1:
+        if row == 0:
+            if not p.check_king():
+                self.brown_king +=1
+            p.make_king()
+        elif row == ROWS -1:
+            if not p.check_king():
+                self.red_king +=1
             p.make_king()
         p.move(col,row)
     def remove_piece(self, pieces):
@@ -166,7 +174,7 @@ class BoardGame:
         
         return moves
     def no_valid_moves(self):
-        print("Checking")
+        #print("Checking")
         valid_moves1 = []
         valid_moves2 = []
         for piece in self.all_pieces(RED):
@@ -188,7 +196,7 @@ class BoardGame:
         else:
             return self.no_valid_moves()
     def score(self):
-        return self.brown_piece - self.red_piece
+        return self.brown_piece + 1.5*self.brown_king - self.red_piece - 1.5*self.red_king
     def all_pieces(self,color):
         all_pieces = []
         for r in self.board:
@@ -213,6 +221,9 @@ class Checkers:
             if self.board.get_piece(self.piece_selected.col,self.piece_selected.row) !=0:
                 self.draw_piece_selected(self.piece_selected)
         self.draw_valid_moves(self.valid_move)
+        #print("Red_king:",self.board.red_king)
+        #print("Brown_king:",self.board.brown_king)
+        #print("==========================")
         pygame.display.update()
     def reset(self,first_color_turn):
         self.board = BoardGame()
