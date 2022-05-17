@@ -86,11 +86,11 @@ class BoardGame:
             self.board[piece.row][piece.col] = 0
             if piece != 0:
                 if piece.color == RED:
-                    if piece.check_king:
+                    if piece.check_king():
                         self.red_king -=1
                     self.red_piece -= 1
                 else:
-                    if piece.check_king:
+                    if piece.check_king():
                         self.brown_king -=1
                     self.brown_piece -= 1
     def get_piece(self,col,row):
